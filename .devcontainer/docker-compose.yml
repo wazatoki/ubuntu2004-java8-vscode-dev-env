@@ -1,0 +1,25 @@
+version: '3'
+
+services: 
+  java8_app:
+    container_name: "java8_app"
+    build: 
+      dockerfile: "Dockerfile"
+      context: "./build"
+    ports: 
+      - "8080:8080"
+    volumes: 
+      - "./share:/mnt/share"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    working_dir: /workspace
+    tty: true
+    depends_on: 
+      - java8_db
+  java8_db:
+    image: "mariadb:10.6.3"
+    container_name: "java8_db"
+    restart: "always"
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "java8db"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --lower_case_table_names=1
